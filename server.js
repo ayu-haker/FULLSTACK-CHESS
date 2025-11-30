@@ -18,17 +18,20 @@ const io = socketIo(server, {
 });
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/chess-game';
+const MONGODB_URI = process.env.MONGODB_URI || null;
 
-// Connect to MongoDB
-mongoose.connect(MONGODB_URI)
-  .then(() => {
-    console.log('Connected to MongoDB');
-  })
-  .catch(err => {
-    console.log('MongoDB connection error. Install MongoDB or the app will work without login features.');
-    console.log('Error:', err.message);
-  });
+// Connect to MongoDB only if URI is provided
+if (MONGODB_URI) {
+  mongoose.connect(MONGODB_URI)
+    .then(() => {
+      console.log('Connected to MongoDB');
+    })
+    .catch(err => {
+      console.log('MongoDB connection error:', err.message);
+    });
+} else {
+  console.log('MongoDB URI not provided. Running without authentication features.');
+}
 
 app.use(cors());
 app.use(express.json());
@@ -43,8 +46,16 @@ function generateGameId() {
   return Math.random().toString(36).substring(2, 9);
 }
 
+// Middleware to check MongoDB connection
+const requireMongoDB = (req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({ error: 'Database not available. Please try guest mode.' });
+  }
+  next();
+};
+
 // Auth Routes
-app.post('/api/register', async (req, res) => {
+app.post('/api/register', requireMongoDB, async (req, res) => {
   try {
     const { username, password } = req.body;
     
@@ -68,7 +79,7 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-app.post('/api/login', async (req, res) => {
+app.post('/api/login', requireMongoDB, async (req, res) => {
   try {
     const { username, password } = req.body;
     
@@ -90,7 +101,7 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Friend Routes
-app.post('/api/friends/request', async (req, res) => {
+app.post('/api/friends/request', requireMongoDB, async (req, res) => {
   try {
     const { token, friendUsername } = req.body;
     const decoded = jwt.verify(token, JWT_SECRET);
@@ -125,7 +136,7 @@ app.post('/api/friends/request', async (req, res) => {
   }
 });
 
-app.post('/api/friends/accept', async (req, res) => {
+app.post('/api/friends/accept', requireMongoDB, async (req, res) => {
   try {
     const { token, requesterId } = req.body;
     const decoded = jwt.verify(token, JWT_SECRET);
@@ -148,7 +159,7 @@ app.post('/api/friends/accept', async (req, res) => {
   }
 });
 
-app.get('/api/friends', async (req, res) => {
+app.get('/api/friends', requireMongoDB, async (req, res) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
     const decoded = jwt.verify(token, JWT_SECRET);
@@ -328,6 +339,11 @@ io.on('connection', (socket) => {
       }
     }
   });
+});
+
+// Catch-all route to serve index.html for any unmatched routes
+app.get('*', (req, res) => {
+  res.sendFile('index.html', { root: 'public' });
 });
 
 const PORT = process.env.PORT || 3000;
