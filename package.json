@@ -1,0 +1,26 @@
+{
+  "name": "chess-game",
+  "version": "1.0.0",
+  "description": "Full-stack chess game with authentication and real-time multiplayer",
+  "main": "server.js",
+  "engines": {
+    "node": ">=14.x"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "vercel-build": "echo 'Build complete'"
+  },
+  "keywords": ["chess", "game", "multiplayer", "socket.io", "mongodb"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "chess.js": "^1.4.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^9.0.0",
+    "socket.io": "^4.8.1"
+  }
+}
