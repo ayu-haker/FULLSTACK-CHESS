@@ -1,8 +1,14 @@
 # ♟️ Chess Game - Full Stack Multiplayer
+<img width="1919" height="865" alt="Screenshot 2025-12-01 062244" src="https://github.com/user-attachments/assets/b5530249-b866-40a6-809f-83744c03a22a" />
+<img width="718" height="719" alt="Screenshot 2025-12-01 021639" src="https://github.com/user-attachments/assets/d89e861f-d91a-4340-b44e-6c1bf93625b4" />
 
 A beautiful, full-featured chess game with real-time multiplayer, user authentication, and friend system.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/YOUR_USERNAME/chess-game)
+## 🚀 APK DOUNLOAD OF THE APP
+<img width="724" height="458" alt="Screenshot 2025-12-01 070540" src="https://github.com/user-attachments/assets/484a6387-4709-4252-a138-1efba4dc16e3" />
+
+https://drive.google.com/file/d/1ETZtBGjTjpKn4TeLtD0b5ZMehiOn_uTw/view?usp=sharing
 
 ## 🚀 Quick Start
 
@@ -161,4 +167,5 @@ For issues or questions, open an issue on GitHub.
 
 ---
 
-Made with ♟️ by [Your Name]
+Made with ❤️ by AYUSHMAN BOSU ROY
+
