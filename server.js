@@ -20,17 +20,18 @@ const io = socketIo(server, {
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 const MONGODB_URI = process.env.MONGODB_URI || null;
 
-// Connect to MongoDB only if URI is provided
-if (MONGODB_URI) {
+// Connect to MongoDB only if URI is provided and not localhost
+if (MONGODB_URI && !MONGODB_URI.includes('localhost') && !MONGODB_URI.includes('127.0.0.1')) {
   mongoose.connect(MONGODB_URI)
     .then(() => {
       console.log('Connected to MongoDB');
     })
     .catch(err => {
       console.log('MongoDB connection error:', err.message);
+      console.log('Continuing without MongoDB...');
     });
 } else {
-  console.log('MongoDB URI not provided. Running without authentication features.');
+  console.log('MongoDB URI not provided or is localhost. Running without authentication features.');
 }
 
 app.use(cors());
@@ -342,16 +343,14 @@ io.on('connection', (socket) => {
 });
 
 // Catch-all route to serve index.html for any unmatched routes
-app.get('*', (req, res) => {
+app.get('/*', (req, res) => {
   res.sendFile('index.html', { root: 'public' });
 });
 
 const PORT = process.env.PORT || 3000;
 
-if (process.env.NODE_ENV !== 'production') {
-  server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-}
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 module.exports = server;
